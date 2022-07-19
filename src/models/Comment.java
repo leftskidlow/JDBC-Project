@@ -4,11 +4,13 @@ import java.util.Date;
 
 public class Comment {
 
+  /* Instance Variables */
   private Post post;
-  private User user;
-  private Date date;
-  private String comment;
+  private final User user;
+  private final Date date;
+  private final String comment;
 
+  /* Constructors */
   public Comment(String comment, User user, Post post) {
     this.post = post;
     this.user = user;
@@ -23,6 +25,7 @@ public class Comment {
     this.comment = comment;
   }
 
+  /* Getters and Setters */
   public void setPost(Post post) {
     this.post = post;
   }

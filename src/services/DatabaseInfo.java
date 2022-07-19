@@ -1,5 +1,8 @@
 package services;
 
+/**
+ * This class contains all the information that is common to all the JDBC services and database access.
+ */
 public class DatabaseInfo {
 
   public static final String DB_URL = "jdbc:sqlite:./src/resources/COMMUNITY_NEWS.db";

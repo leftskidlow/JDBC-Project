@@ -1,25 +1,23 @@
 package viewmodels;
 
-import models.Comment;
-import models.Post;
-import services.AuthService;
-import models.User;
-import services.DatabaseInfo;
-import services.PostService;
-import services.UserService;
+import models.*;
+import services.*;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class CommunityNewsForum {
 
-
+  /* Class Variables */
   private static final Scanner CONSOLE = new Scanner(System.in);
-  private final String[] VALID_LOGGED_IN_COMMANDS = {"help", "profile", "my posts", "recent news", "find post", "logout", "write post", "delete account", "exit"};
+
+  /* Instance Variables */
+  private final String[] VALID_LOGGED_IN_COMMANDS = {"help", "profile", "my posts", "recent news", "find post", "write post", "logout", "delete account", "exit"};
   private final String[] VALID_POST_COMMANDS = {"help", "write comment", "exit"};
-  private User user;
-  private String currentResponse;
-  private Post postBeingViewed;
+
+  private User user; // The current user of the forum, once logged in.
+  private String currentResponse; // The current response retrieved from the terminal
+  private Post postBeingViewed; // The Post that is being viewed by the User
 
 
   /*
@@ -39,7 +37,6 @@ public class CommunityNewsForum {
     System.out.println("Welcome back to the Community News Forum " + user.getUsername() + ", how have you been?");
     System.out.println("Let's get you caught up on what's happened since you left!");
     loggedInLoop();
-
   }
 
   private void noPreviousUserIntro() {
@@ -67,10 +64,9 @@ public class CommunityNewsForum {
         System.out.println("An account is mandatory to continue, thank you for visiting!");
         System.exit(1);
       }
-      UserService.createUser(user, DatabaseInfo.Tables.USERS.label);
+      UserService.saveUser(user, DatabaseInfo.Tables.USERS.label);
       System.out.println("Your account was created, let's get you logged in!");
     }
-    // HERE: Add logic that authenticates the user then presents them with the menu options.
     checkPassword(user);
     loggedInLoop();
   }
@@ -100,12 +96,12 @@ public class CommunityNewsForum {
       System.out.println("That password didn't match what we have on file, let's try again.");
       System.out.println("You have " + (3 - i) + " more attempts before the program is closed. \n");
     }
-    user = AuthService.logout();
+    this.user = AuthService.logout();
     System.exit(1);
   }
 
   /*
-   * Methods used to handle user inputs
+   * These methods are used to handle user inputs
    */
 
   private void postCommandHandler(String command) {
@@ -113,7 +109,7 @@ public class CommunityNewsForum {
       case "help":
         help(VALID_POST_COMMANDS);
         break;
-      case "write comment": ;
+      case "write comment":
         writeNewComment();
         break;
       case "exit":
@@ -168,6 +164,7 @@ public class CommunityNewsForum {
     System.out.print("You've entered an invalid command, try again or type 'help': ");
     loggedInCommandHandler(CONSOLE.nextLine());
   }
+
   private void invalidPostCommand() {
     // Checks user input and ensures a proper command is entered
     System.out.print("You've entered an invalid command, try again or type 'help': ");
@@ -220,7 +217,6 @@ public class CommunityNewsForum {
       System.out.println();
     });
   }
-
 
   private void showRecentNews() {
     // Shows the top five most recent news stories
@@ -279,8 +275,15 @@ public class CommunityNewsForum {
   private void writeNewPost() {
     System.out.print("Post Title: ");
     String title = CONSOLE.nextLine();
+    while (title.isEmpty()) {
+      title = CONSOLE.nextLine();
+    }
     System.out.print("Post Body: ");
     String body = CONSOLE.nextLine();
+    while (body.isEmpty()) {
+      CONSOLE.nextLine();
+    }
+
     Post newPost = new Post(title, body, user);
     System.out.println();
     newPost.printPost(false);
@@ -294,6 +297,8 @@ public class CommunityNewsForum {
     } else if (answer.equals("delete")) {
       System.out.println("Let's try again..\n");
       writeNewPost();
+    } else {
+      System.out.println("We didn't understand, so we're taking you back to the main menu.");
     }
   }
 

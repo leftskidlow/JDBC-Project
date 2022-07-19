@@ -9,17 +9,17 @@ import java.util.UUID;
 public class Post {
 
   /* Class Variables */
-  private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+  private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 
   /* Instance Variables */
-  private UUID id;
-  private String title;
-  private String message;
-  private User user;
-  private Date date;
-  private List<Comment> comments;
+  private final UUID id;
+  private final String title;
+  private final String message;
+  private final User user;
+  private final Date date;
+  private final List<Comment> comments;
 
-  /* Constructor */
+  /* Constructors */
   public Post(String title, String message, User user) {
     this.id = UUID.randomUUID();
     this.title = title;
@@ -39,6 +39,12 @@ public class Post {
   }
 
   /* Instance Methods */
+
+  /** This method adds a Comment object to the Post's 'comments' List
+   *
+   * @param user The user that posted the comment
+   * @param comment The comment's message
+   */
   public void addComment (User user, String comment) {
     if (comment.length() > 168) {
       comment = comment.substring(0,165);
@@ -48,6 +54,8 @@ public class Post {
     comments.add(newComment);
   }
 
+  /** This method iterates over the comments associated with the post and prints them out
+   */
   public void displayComments() {
     System.out.println("  There are " + comments.size() + " comments:");
     comments.forEach( c -> {
@@ -57,6 +65,11 @@ public class Post {
     });
   }
 
+  /** This method prints the main post title and body. If 'true' is passed, it will also print all the comments
+   * associated with the post.
+   *
+   * @param withComments determines if comments will be printed or not
+   */
   public void printPost(boolean withComments) {
     System.out.println("Title: " + title);
     System.out.println("Date: " + simpleDateFormat.format(date));
@@ -66,6 +79,7 @@ public class Post {
     }
   }
 
+  /* Getters and Setters */
   public UUID getId() {
     return id;
   }
