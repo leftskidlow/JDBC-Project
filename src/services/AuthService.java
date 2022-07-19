@@ -1,7 +1,6 @@
 package services;
 
 import models.User;
-import viewmodels.MainThread;
 
 import java.sql.*;
 

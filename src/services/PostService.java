@@ -6,12 +6,76 @@ import models.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PostService {
-  // TODO: boolean savePost(Post post) {}
-  // TODO: List<Post> getUsersPosts(User user) {}
-  // TODO: List<Post> getPostsByUser(User user) {}
+
+  public static int getNumberOfPostsByUser(User user) {
+    String countPosts = "SELECT COUNT(USER_ID) FROM " + DatabaseInfo.Tables.POSTS + " WHERE USER_ID =\"" + user.getId().toString() + "\";";
+    int totalPosts = 0;
+    try (
+      Connection connection = DriverManager.getConnection(DatabaseInfo.DB_URL);
+      Statement statement = connection.createStatement();
+      ResultSet results = statement.executeQuery(countPosts);
+      ) {
+      totalPosts = results.getInt(1);
+    } catch (SQLException e) {
+
+    }
+    return totalPosts;
+  }
+
+  public static int getNumberOfCommentsByUser(User user) {
+    String countPosts = "SELECT COUNT(USER_ID) FROM " + DatabaseInfo.Tables.COMMENTS + " WHERE USER_ID =\"" + user.getId().toString() + "\";";
+    int totalComments = 0;
+    try (
+      Connection connection = DriverManager.getConnection(DatabaseInfo.DB_URL);
+      Statement statement = connection.createStatement();
+      ResultSet results = statement.executeQuery(countPosts);
+    ) {
+      totalComments = results.getInt(1);
+    } catch (SQLException e) {
+
+    }
+    return totalComments;
+  }
+
+  public static void savePost(Post post) {
+    String savePost = "INSERT INTO " + DatabaseInfo.Tables.POSTS + " VALUES (" +
+      "\"" + post.getId().toString() + "\", " +
+      "\"" + post.getTitle() + "\", " +
+      "\"" + post.getMessage() + "\", " +
+      "\"" + post.getUser().getId().toString() + "\", " +
+      post.getDate().getTime() +
+      ");";
+
+    try (
+      Connection connection = DriverManager.getConnection(DatabaseInfo.DB_URL);
+      Statement statement = connection.createStatement();
+      ) {
+      statement.executeUpdate(savePost);
+    } catch (SQLException e) {
+
+    }
+  }
+
+  public static List<Post> getPostsByUser(User user) {
+    List<Post> usersStories = new ArrayList<>();
+    String recentNews = "SELECT * FROM " + DatabaseInfo.Tables.POSTS + " WHERE USER_ID = \"" +user.getId().toString()+ "\" ORDER BY POST_DATE DESC;";
+    try (
+      Connection connection = DriverManager.getConnection(DatabaseInfo.DB_URL);
+      Statement statement = connection.createStatement();
+      ResultSet results = statement.executeQuery(recentNews);
+    ) {
+      while (results.next()) {
+        Post post = new Post(results.getString(1), results.getString(2), results.getString(3), user, results.getLong(5), null);
+        usersStories.add(post);
+      }
+    } catch (SQLException e) {
+
+    }
+
+    return usersStories;
+  }
 
   public static Post getPostByTitle(String title) {
     String findPostbyId = "SELECT * FROM " + DatabaseInfo.Tables.POSTS + " WHERE TITLE = \"" + title + "\";";

@@ -16,7 +16,8 @@ public class UserService {
       statement.executeUpdate("INSERT INTO " + table + " VALUES (\"" +
         user.getId().toString() + "\", \"" +
         user.getUsername() + "\", \"" +
-        user.getPassword() + "\");");
+        user.getPassword() +
+        "\");");
     } catch (SQLException e) {
       System.out.println("Something went wrong when saving your account to the database.");
       System.out.println(e);

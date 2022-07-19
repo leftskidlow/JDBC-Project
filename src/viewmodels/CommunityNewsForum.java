@@ -8,7 +8,6 @@ import services.DatabaseInfo;
 import services.PostService;
 import services.UserService;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -118,7 +117,7 @@ public class CommunityNewsForum {
         writeNewComment();
         break;
       case "exit":
-        System.exit(1);
+        loggedInLoop();
         break;
       default:
         System.out.println(command);
@@ -201,7 +200,7 @@ public class CommunityNewsForum {
   private void displayProfile() {
     // Displays User info, total posts, total comments, and most recent post
     System.out.println("\nYour username: " + user.getUsername());
-    System.out.println("  You've written " + "TODO_POSTS_TOTAL" + " news posts to this community and commented " + "TODO_COMMENTS_TOTAL" + " times.");
+    System.out.println("  You've written " + PostService.getNumberOfPostsByUser(user) + " news posts to this community and commented " + PostService.getNumberOfCommentsByUser(user) + " times.");
     System.out.println("Your most recent news post was:\n");
     Post post = PostService.getMostRecentPostByUser(user);
     if (post != null) {
@@ -214,6 +213,12 @@ public class CommunityNewsForum {
 
   private void getUserPosts() {
     // Displays all the users posts
+    System.out.println("Here are all your stories, the most recent ones are listed first:\n");
+    List<Post> usersPosts = PostService.getPostsByUser(user);
+    usersPosts.forEach(p -> {
+      p.printPost(false);
+      System.out.println();
+    });
   }
 
 
@@ -253,9 +258,9 @@ public class CommunityNewsForum {
   private void viewStory(Post post, int storyNumber) {
     // Allows a user to search for a story by title
     postBeingViewed = post;
-    System.out.println("+----------------+");
-    System.out.println("| Story Number " + storyNumber +" |");
-    System.out.println("+----------------+\n");
+    System.out.println("+--------------------+");
+    System.out.println("|   Story Number " + storyNumber +"   |");
+    System.out.println("+--------------------+\n");
     post.printPost(true);
     enterPostLoop();
   }
@@ -272,8 +277,26 @@ public class CommunityNewsForum {
   }
 
   private void writeNewPost() {
+    System.out.print("Post Title: ");
+    String title = CONSOLE.nextLine();
+    System.out.print("Post Body: ");
+    String body = CONSOLE.nextLine();
+    Post newPost = new Post(title, body, user);
+    System.out.println();
+    newPost.printPost(false);
+    System.out.println();
+    System.out.print("This is how your post looks, would you like to 'save', 'delete', or 'exit'? ");
+    String answer = CONSOLE.next();
 
+    if (answer.equals("save")) {
+      System.out.println("Saving your post...\n");
+      PostService.savePost(newPost);
+    } else if (answer.equals("delete")) {
+      System.out.println("Let's try again..\n");
+      writeNewPost();
+    }
   }
+
   private void writeNewComment() {
     // User comments on the selected post
     System.out.print("Your Comment: ");
@@ -281,7 +304,6 @@ public class CommunityNewsForum {
     PostService.saveComment(newComment);
     postBeingViewed = PostService.getPostByTitle(postBeingViewed.getTitle());
     viewStory(postBeingViewed, 1);
-    // user writes a new post
   }
 
 }
