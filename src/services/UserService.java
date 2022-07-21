@@ -16,7 +16,7 @@ public class UserService {
   public static void saveUser(User user, String table) {
 
     String SQL_insertUser = "INSERT INTO " + table + " VALUES (\"" +
-      user.getId().toString() + "\", \"" +
+      user.getIdString() + "\", \"" +
       user.getUsername() + "\", \"" +
       user.getPassword() +
       "\");";
@@ -120,7 +120,7 @@ public class UserService {
    */
   public static void deleteUser(User user) {
 
-    String deleteFromUsersTable = "DELETE FROM " + DatabaseInfo.Tables.USERS.label + " WHERE ID = \"" + user.getId().toString() + "\";";
+    String deleteFromUsersTable = "DELETE FROM " + DatabaseInfo.Tables.USERS.label + " WHERE ID = \"" + user.getIdString() + "\";";
 
     try (
       Connection connection = DriverManager.getConnection(DatabaseInfo.DB_URL);

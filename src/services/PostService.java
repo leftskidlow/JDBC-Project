@@ -17,7 +17,7 @@ public class PostService {
    */
   public static int getNumberOfPostsByUser(User user) {
 
-    String SQL_countPosts = "SELECT COUNT(USER_ID) FROM " + DatabaseInfo.Tables.POSTS + " WHERE USER_ID =\"" + user.getId().toString() + "\";";
+    String SQL_countPosts = "SELECT COUNT(USER_ID) FROM " + DatabaseInfo.Tables.POSTS + " WHERE USER_ID =\"" + user.getIdString() + "\";";
     int totalPosts = 0;
 
     try (
@@ -40,7 +40,7 @@ public class PostService {
    */
   public static int getNumberOfCommentsByUser(User user) {
 
-    String SQL_countComments = "SELECT COUNT(USER_ID) FROM " + DatabaseInfo.Tables.COMMENTS + " WHERE USER_ID =\"" + user.getId().toString() + "\";";
+    String SQL_countComments = "SELECT COUNT(USER_ID) FROM " + DatabaseInfo.Tables.COMMENTS + " WHERE USER_ID =\"" + user.getIdString() + "\";";
     int totalComments = 0;
 
     try (
@@ -63,10 +63,10 @@ public class PostService {
   public static void savePost(Post post) {
 
     String SQL_savePost = "INSERT INTO " + DatabaseInfo.Tables.POSTS + " VALUES (" +
-      "\"" + post.getId().toString() + "\", " +
+      "\"" + post.getIdString() + "\", " +
       "\"" + post.getTitle() + "\", " +
       "\"" + post.getMessage() + "\", " +
-      "\"" + post.getUser().getId().toString() + "\", " +
+      "\"" + post.getUser().getIdString() + "\", " +
       post.getDate().getTime() +
       ");";
 
@@ -87,7 +87,7 @@ public class PostService {
    */
   public static List<Post> getPostsByUser(User user) {
 
-    String SQL_recentNews = "SELECT * FROM " + DatabaseInfo.Tables.POSTS + " WHERE USER_ID = \"" +user.getId().toString()+ "\" ORDER BY POST_DATE DESC;";
+    String SQL_recentNews = "SELECT * FROM " + DatabaseInfo.Tables.POSTS + " WHERE USER_ID = \"" +user.getIdString()+ "\" ORDER BY POST_DATE DESC;";
     List<Post> usersStories = new ArrayList<>();
 
     try (
@@ -167,7 +167,7 @@ public class PostService {
    */
   public static Post getMostRecentPostByUser(User user) {
 
-    String SQL_getMostRecentPost = "SELECT * FROM " + DatabaseInfo.Tables.POSTS.label + " WHERE USER_ID = \"" + user.getId().toString() + "\" ORDER BY POST_DATE DESC;";
+    String SQL_getMostRecentPost = "SELECT * FROM " + DatabaseInfo.Tables.POSTS.label + " WHERE USER_ID = \"" + user.getIdString() + "\" ORDER BY POST_DATE DESC;";
     Post post = null;
 
     try (
@@ -192,8 +192,8 @@ public class PostService {
   public static void saveComment(Comment comment) {
 
     String SQL_saveComment = "INSERT INTO " + DatabaseInfo.Tables.COMMENTS + " VALUES (" +
-      "\"" + comment.getPost().getId().toString() + "\", " +
-      "\"" + comment.getUser().getId().toString() + "\", " +
+      "\"" + comment.getPost().getIdString() + "\", " +
+      "\"" + comment.getUser().getIdString() + "\", " +
       comment.getDate().getTime() + ", " +
       "\"" + comment.getComment() +
       "\");";

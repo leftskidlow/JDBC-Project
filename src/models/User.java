@@ -2,6 +2,10 @@ package models;
 
 import java.util.UUID;
 
+/**
+ * The User class is used to represent a user of the Community News Forum. Users are stored both in the USERS
+ * and CURRENT_USER table of the database. While stored in the
+ */
 public class User {
 
   /* Instance Variables */
@@ -27,8 +31,8 @@ public class User {
     return username;
   }
 
-  public UUID getId() {
-    return id;
+  public String getIdString() {
+    return id.toString();
   }
 
   public String getPassword() {

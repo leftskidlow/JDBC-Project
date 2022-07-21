@@ -80,8 +80,8 @@ public class Post {
   }
 
   /* Getters and Setters */
-  public UUID getId() {
-    return id;
+  public String getIdString() {
+    return id.toString();
   }
 
   public String getTitle() {
